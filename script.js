@@ -1,9 +1,21 @@
 // --- 1. YOUR PHOTO MANAGER ---
 const myPhotos = [
-    { filename: 'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?w=800', category: 'family' },
-    { filename: 'https://images.unsplash.com/photo-1517840901100-8179e982acb7?w=800', category: 'couples' },
-    { filename: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800', category: 'family' },
-    { filename: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800', category: 'couples' }
+    { filename: 'b1.jpg', category: 'family' },
+    { filename: 'b3.jpg', category: 'couples' },
+    { filename: 'b5.jpg', category: 'family' },
+    { filename: 'a.jpg', category: 'couples' },
+    { filename: 'a2.jpg', category: 'family' },
+    { filename: 'b5.jpg', category: 'couples' },
+    { filename: 'b7.jpg', category: 'family' },
+    { filename: 'b.jpg', category: 'couples' },
+    { filename: 's1.jpg', category: 'family' },
+    { filename: 's4.jpg', category: 'couples' },
+    { filename: 's6.jpg', category: 'family' },
+    { filename: 'sa1.jpg', category: 'couples' },
+    { filename: 'sa3.jpg', category: 'family' },
+    { filename: 'sa5.jpg', category: 'couples' },
+    { filename: 'sa5.jpg', category: 'family' },
+    { filename: 'sa7.jpg', category: 'couples' }
 ];
 
 // --- 2. BUILD THE GALLERY AUTOMATICALLY ---
