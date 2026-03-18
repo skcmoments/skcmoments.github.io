@@ -57,7 +57,13 @@ section { padding: 6rem 5%; max-width: 1200px; margin: 0 auto; }
 .section-header p { color: var(--text-muted); }
 
 /* Gallery */
-.filter-btns { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;}
+.filter-btns {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* This ensures buttons move to a new line on small phones */
+}
 .filter-btn { background: none; border: none; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; color: var(--text-muted); padding-bottom: 5px; font-family: 'Inter', sans-serif;}
 .filter-btn.active { color: var(--text-main); border-bottom: 1px solid var(--text-main); }
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
