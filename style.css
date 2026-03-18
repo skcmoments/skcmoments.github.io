@@ -138,7 +138,15 @@ footer {
     
     border-radius: 2px;
 }
+.gallery-item {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+    background-color: #f0f0f0; /* A light grey box shows while loading */
+}
 
+.gallery-item[src] {
+    opacity: 1;
+}
 /* Fix for mobile screens */
 @media (max-width: 768px) {
     .about-grid { 
