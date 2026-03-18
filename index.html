@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKC Moments | Outdoor Family Photography</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="logo">SKC MOMENTS</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#pricing">Investment</a>
+            <a href="#contact" class="btn-book">Book a Session</a>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="fade-in">
+            <h1>Natural. Raw. Yours.</h1>
+            <p>Capturing the genuine connection of outdoor family moments.</p>
+        </div>
+    </section>
+
+    <section id="portfolio">
+        <div class="section-header fade-in">
+            <h2>Client Gallery</h2>
+            <p>A collection of honest moments and beautiful light.</p>
+        </div>
+        
+        <div class="filter-btns fade-in">
+            <button class="filter-btn active" onclick="filterGallery('all')">All</button>
+            <button class="filter-btn" onclick="filterGallery('family')">Families</button>
+            <button class="filter-btn" onclick="filterGallery('couples')">Couples</button>
+        </div>
+
+        <div class="gallery fade-in" id="dynamic-gallery"></div>
+    </section>
+
+    <div id="lightbox">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Full Screen Photo">
+    </div>
+
+    <section id="pricing">
+        <div class="section-header fade-in">
+            <h2>Investment</h2>
+        </div>
+        <div class="pricing-grid fade-in">
+            <div class="price-card">
+                <h3>The Mini</h3>
+                <div class="price">$150</div>
+                <p>30 mins | 15 Images | 1 Location</p>
+            </div>
+            <div class="price-card" style="border: 2px solid var(--accent); transform: scale(1.05);">
+                <h3>The Signature</h3>
+                <div class="price">$300</div>
+                <p>1 hour | 40+ Images | Choice of Location</p>
+            </div>
+            <div class="price-card">
+                <h3>The Extended</h3>
+                <div class="price">$450</div>
+                <p>2 hours | Full Gallery | 2 Locations</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="section-header fade-in">
+            <h2>Book Your Session</h2>
+            <p>Fill out the details below. I'll get back to you within 48 hours.</p>
+        </div>
+        <form class="contact-form fade-in" action="https://formspree.io/f/xgonpbap" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email Address" required>
+            <select name="session_type" required>
+                <option value="" disabled selected>Session Type...</option>
+                <option value="family">Outdoor Family Session</option>
+                <option value="couples">Couples / Engagement</option>
+            </select>
+            <input type="date" name="preferred_date" required>
+            <textarea name="message" rows="4" placeholder="Tell me about your vision..." required></textarea>
+            <button type="submit" class="submit-btn">Send Booking Request</button>
+        </form>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
