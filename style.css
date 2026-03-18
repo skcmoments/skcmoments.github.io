@@ -142,15 +142,20 @@ footer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
-    /* This next line is key for mobile */
-    grid-auto-rows: 400px; 
+    min-height: 1000px; /* Forces space for the gallery */
 }
 
 .gallery-item {
     width: 100%;
-    height: 100%;
+    height: 400px; /* Fixes the height so boxes don't collapse */
     object-fit: cover;
-    background-color: #f0f0f0; /* Shows a placeholder box immediately */
+    background-color: #f3f3f3; /* Shows a light grey box while loading */
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+.gallery-item.loaded {
+    opacity: 1;
 }
 /* Fix for mobile screens */
 @media (max-width: 768px) {

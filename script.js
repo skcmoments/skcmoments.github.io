@@ -17,11 +17,9 @@ const myPhotos = [
     { filename: 'sa7.jpg', category: 'outdoor' }
 ];
 
-// --- 2. BUILD THE GALLERY AUTOMATICALLY ---
-// This wrapper is the secret—it makes the gallery load immediately!
 document.addEventListener('DOMContentLoaded', () => {
     loadGallery();
-    setupAnimations();
+    setupScrollAnimations();
 });
 
 function loadGallery() {
@@ -29,40 +27,47 @@ function loadGallery() {
     if (!galleryContainer) return;
 
     galleryContainer.innerHTML = ''; 
-    
-    myPhotos.forEach((photo) => {
+
+    // This "Observer" watches each image and loads it only when it's on screen
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src; // Moves the real URL into the src
+                img.onload = () => img.classList.add('loaded');
+                observer.unobserve(img); // Stop watching once loaded
+            }
+        });
+    }, { rootMargin: '50px' }); // Starts loading 50px before it enters the screen
+
+    myPhotos.forEach(photo => {
         const img = document.createElement('img');
-        
-        // 1. Load the tiny version for the gallery grid (FAST)
-        img.src = `thumbnails/${photo.filename}`; 
-        
         img.className = `gallery-item ${photo.category}`;
-        img.alt = "SKC Moments Photography";
-        img.loading = "lazy"; 
+        
+        // WE USE "data-src" INSTEAD OF "src" TO PREVENT THE LAG
+        img.dataset.src = `images/${photo.filename}`; 
+        
+        // This is a tiny invisible placeholder so the box exists
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
         img.addEventListener('click', () => {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            lightbox.classList.add('active');
-            
-            // 2. Load the high-res version ONLY when they click it
-            lightboxImg.src = `images/${photo.filename}`; 
+            document.getElementById('lightbox').classList.add('active');
+            document.getElementById('lightbox-img').src = `images/${photo.filename}`;
         });
 
         galleryContainer.appendChild(img);
+        imageObserver.observe(img); // Start watching this image
     });
 }
 
-// --- 3. FILTER BUTTONS ---
+// --- FILTER & UTILS ---
 function filterGallery(category) {
     const items = document.querySelectorAll('.gallery-item');
     const btns = document.querySelectorAll('.filter-btn');
-    
     btns.forEach(btn => btn.classList.remove('active'));
     
-    // Find button and set active
-    const clickedBtn = Array.from(btns).find(btn => btn.getAttribute('onclick').includes(`'${category}'`));
-    if (clickedBtn) clickedBtn.classList.add('active');
+    // Safety check for the click event
+    if (event && event.currentTarget) event.currentTarget.classList.add('active');
 
     items.forEach(item => {
         if (category === 'all' || item.classList.contains(category)) {
@@ -73,26 +78,24 @@ function filterGallery(category) {
     });
 }
 
-// --- 4. LIGHTBOX CLOSE ---
 function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
 }
 
-// --- 5. STICKY NAV & SCROLL ANIMATIONS ---
 window.addEventListener('scroll', () => {
     const nav = document.getElementById('navbar');
     if (window.scrollY > 50) nav.classList.add('scrolled');
     else nav.classList.remove('scrolled');
 });
 
-function setupAnimations() {
+function setupScrollAnimations() {
     const faders = document.querySelectorAll('.fade-in');
-    const appearOnScroll = new IntersectionObserver((entries, observer) => {
+    const appearOnScroll = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add('appear');
-            observer.unobserve(entry.target);
+            if (entry.isIntersecting) {
+                entry.target.classList.add('appear');
+            }
         });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.1 });
     faders.forEach(fader => appearOnScroll.observe(fader));
 }
