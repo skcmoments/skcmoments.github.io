@@ -6,7 +6,7 @@ const myPhotos = [
     { filename: 'a.jpg', category: 'couples' },
     { filename: 'a2.jpg', category: 'family' },
     { filename: 'b5.jpg', category: 'couples' },
-    { filename: 'b7.jpg', category: 'family' },
+    { filename: 'e.jpg', category: 'family' },
     { filename: 'b.jpg', category: 'couples' },
     { filename: 's1.jpg', category: 'family' },
     { filename: 's4.jpg', category: 'couples' },
