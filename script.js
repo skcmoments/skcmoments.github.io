@@ -30,26 +30,26 @@ function loadGallery() {
 
     galleryContainer.innerHTML = ''; 
     
-    myPhotos.forEach((photo, index) => {
-        // We set a tiny timeout for each photo based on its position in the list
-        setTimeout(() => {
-            const img = document.createElement('img');
-            img.src = `images/${photo.filename}`; 
-            img.className = `gallery-item ${photo.category} fade-in`; // Added fade-in here
-            img.alt = "SKC Moments Photography";
-            img.loading = "lazy"; 
-            
-            img.addEventListener('click', () => {
-                document.getElementById('lightbox').classList.add('active');
-                document.getElementById('lightbox-img').src = `images/${photo.filename}`;
-            });
+    myPhotos.forEach((photo) => {
+        const img = document.createElement('img');
+        
+        // 1. Load the tiny version for the gallery grid (FAST)
+        img.src = `thumbnails/${photo.filename}`; 
+        
+        img.className = `gallery-item ${photo.category}`;
+        img.alt = "SKC Moments Photography";
+        img.loading = "lazy"; 
 
-            galleryContainer.appendChild(img);
+        img.addEventListener('click', () => {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightbox.classList.add('active');
             
-            // This forces the "fade-in" animation to trigger after the image is added
-            setTimeout(() => img.classList.add('appear'), 10);
-            
-        }, index * 50); // 50ms, 100ms, 150ms... this "staggers" the load
+            // 2. Load the high-res version ONLY when they click it
+            lightboxImg.src = `images/${photo.filename}`; 
+        });
+
+        galleryContainer.appendChild(img);
     });
 }
 
