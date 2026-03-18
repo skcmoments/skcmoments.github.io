@@ -119,3 +119,28 @@ footer {
         transform: scale(1) !important; /* Stops the middle pricing card from overlapping on mobile */
     }
 }
+/* --- ABOUT SECTION STYLES --- */
+.about-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 4rem; 
+    align-items: center; 
+}
+
+.about-img { 
+    width: 100%; 
+    height: 600px; 
+    object-fit: cover; 
+    border-radius: 2px;
+}
+
+/* Fix for mobile screens */
+@media (max-width: 768px) {
+    .about-grid { 
+        grid-template-columns: 1fr; 
+        gap: 2rem; 
+    }
+    .about-img {
+        height: 400px;
+    }
+}
