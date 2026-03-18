@@ -31,7 +31,17 @@ nav.scrolled { background: rgba(250, 250, 250, 0.95); padding: 1rem 5%; box-shad
 .btn-book { background: var(--text-main); color: var(--white); padding: 0.6rem 1.5rem; border-radius: 2px; }
 
 /* Hero */
-#home { height: 100vh; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3') center/cover; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--white); text-align: center; }
+#home { height: 100vh; 
+    max-width: 100%; /* This overrides the 1200px limit */
+    margin: 0;       /* Removes any outer spacing */
+    padding: 0;      /* Removes any inner spacing */
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3') center/cover no-repeat; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    color: var(--white); 
+    text-align: center; }
 #home h1 { font-size: 4.5rem; margin-bottom: 1rem;}
 #home p { font-size: 1.2rem; font-weight: 300; }
 
