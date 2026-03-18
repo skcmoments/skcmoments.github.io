@@ -74,22 +74,14 @@
     <section id="contact">
         <div class="section-header fade-in">
             <h2>Book Your Session</h2>
-            <p>Fill out the details below. I'll get back to you within 48 hours.</p>
+            <p>Select an available date and time below to reserve your spot.</p>
         </div>
-        <form class="contact-form fade-in" action="https://formspree.io/f/xgonpbap" method="POST">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email Address" required>
-            <select name="session_type" required>
-                <option value="" disabled selected>Session Type...</option>
-                <option value="family">Outdoor Family Session</option>
-                <option value="couples">Couples / Engagement</option>
-                <option value="couples"> Infants </option>
-                <option value="couples"> Functions </option>
-            </select>
-            <input type="date" name="preferred_date" required>
-            <textarea name="message" rows="4" placeholder="Tell me about your vision..." required></textarea>
-            <button type="submit" class="submit-btn">Send Booking Request</button>
-        </form>
+        
+        <div class="fade-in">
+            <div class="calendly-inline-widget" data-url="https://calendly.com/sachinkadel7/30min" style="min-width:320px;height:700px;"></div>
+            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+            </div>
+
     </section>
 
     <script src="script.js"></script>
