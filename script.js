@@ -53,9 +53,11 @@ function filterGallery(category) {
     const btns = document.querySelectorAll('.filter-btn');
     
     btns.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    // Use event.currentTarget to be more reliable
+    if (event) event.target.classList.add('active');
 
     items.forEach(item => {
+        // This is the logic that matches the button word to the category word
         if (category === 'all' || item.classList.contains(category)) {
             item.style.display = 'block';
         } else {
