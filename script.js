@@ -29,20 +29,27 @@ function loadGallery() {
     if (!galleryContainer) return;
 
     galleryContainer.innerHTML = ''; 
-    myPhotos.forEach(photo => {
-        const img = document.createElement('img');
-        
-        // If you don't have a thumbnails folder yet, change 'thumbnails/' to 'images/' below
-        img.src = `images/${photo.filename}`; 
-        img.className = `gallery-item ${photo.category}`;
-        img.loading = "lazy"; 
-        
-        img.addEventListener('click', () => {
-            document.getElementById('lightbox').classList.add('active');
-            document.getElementById('lightbox-img').src = `images/${photo.filename}`;
-        });
+    
+    myPhotos.forEach((photo, index) => {
+        // We set a tiny timeout for each photo based on its position in the list
+        setTimeout(() => {
+            const img = document.createElement('img');
+            img.src = `images/${photo.filename}`; 
+            img.className = `gallery-item ${photo.category} fade-in`; // Added fade-in here
+            img.alt = "SKC Moments Photography";
+            img.loading = "lazy"; 
+            
+            img.addEventListener('click', () => {
+                document.getElementById('lightbox').classList.add('active');
+                document.getElementById('lightbox-img').src = `images/${photo.filename}`;
+            });
 
-        galleryContainer.appendChild(img);
+            galleryContainer.appendChild(img);
+            
+            // This forces the "fade-in" animation to trigger after the image is added
+            setTimeout(() => img.classList.add('appear'), 10);
+            
+        }, index * 50); // 50ms, 100ms, 150ms... this "staggers" the load
     });
 }
 
