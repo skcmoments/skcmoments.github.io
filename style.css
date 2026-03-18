@@ -128,9 +128,14 @@ footer {
 }
 
 .about-img { 
-    width: 90%; 
-    height: 300px; 
-    object-fit: cover; 
+    width: 100%; 
+    height: 600px; /* This is the window size */
+    object-fit: cover; /* This makes sure the photo fills the window */
+    
+    /* --- THE FIX --- */
+    object-position: bottom; 
+    /* ---------------- */
+    
     border-radius: 2px;
 }
 
