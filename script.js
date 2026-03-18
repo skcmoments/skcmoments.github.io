@@ -1,22 +1,24 @@
+
 // --- 1. YOUR PHOTO MANAGER ---
 const myPhotos = [
-    { filename: 'b1.jpg', category: 'family' },
-    { filename: 'b3.jpg', category: 'couples' },
-    { filename: 'b5.jpg', category: 'family' },
-    { filename: 'a.jpg', category: 'couples' },
+    { filename: 'b1.jpg', category: 'outdoor' },
+    { filename: 'b3.jpg', category: 'outdoor' },
+    { filename: 'b5.jpg', category: 'outdoor' },
+    { filename: 'a.jpg', category: 'functions' },
     { filename: 'a2.jpg', category: 'family' },
-    { filename: 'b5.jpg', category: 'couples' },
-    { filename: 'e.jpg', category: 'family' },
-    { filename: 'b.jpg', category: 'couples' },
+    { filename: 'a5.jpg', category: 'family' },
+    { filename: 'e.jpg', category: 'functions' },
+    { filename: 'b.jpg', category: 'functions' },
     { filename: 's1.jpg', category: 'family' },
-    { filename: 's4.jpg', category: 'couples' },
+    { filename: 's4.jpg', category: 'family' },
     { filename: 's6.jpg', category: 'family' },
-    { filename: 'sa1.jpg', category: 'couples' },
-    { filename: 'sa3.jpg', category: 'family' },
-    { filename: 'sa5.jpg', category: 'couples' },
-    { filename: 'sa5.jpg', category: 'family' },
-    { filename: 'sa7.jpg', category: 'couples' }
+    { filename: 'sa1.jpg', category: 'functions' },
+    { filename: 'sa3.jpg', category: 'functions' },
+    { filename: 'sa5.jpg', category: 'functions' },
+    { filename: 'sa7.jpg', category: 'outdoor' }
 ];
+
+// The rest of your script.js (loadGallery, filterGallery, etc.) remains the same!
 
 // --- 2. BUILD THE GALLERY AUTOMATICALLY ---
 const galleryContainer = document.getElementById('dynamic-gallery');
