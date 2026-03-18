@@ -48,16 +48,22 @@ function loadGallery() {
 loadGallery();
 
 // --- 3. FILTER BUTTONS ---
+// --- 3. FILTER BUTTONS ---
 function filterGallery(category) {
     const items = document.querySelectorAll('.gallery-item');
     const btns = document.querySelectorAll('.filter-btn');
     
+    // Remove the 'active' underline from all buttons
     btns.forEach(btn => btn.classList.remove('active'));
-    // Use event.currentTarget to be more reliable
-    if (event) event.target.classList.add('active');
+    
+    // Find the button that was clicked and add the 'active' underline
+    // We use Array.from to find the button that has the matching category in its onclick
+    const clickedBtn = Array.from(btns).find(btn => btn.getAttribute('onclick').includes(`'${category}'`));
+    if (clickedBtn) clickedBtn.classList.add('active');
 
+    // Show or hide images
     items.forEach(item => {
-        // This is the logic that matches the button word to the category word
+        // We check if the image has the category class (e.g. class="gallery-item outdoor")
         if (category === 'all' || item.classList.contains(category)) {
             item.style.display = 'block';
         } else {
@@ -65,7 +71,6 @@ function filterGallery(category) {
         }
     });
 }
-
 // --- 4. LIGHTBOX CLOSE ---
 function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
