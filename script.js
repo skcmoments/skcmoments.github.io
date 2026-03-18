@@ -28,18 +28,15 @@ function loadGallery() {
     myPhotos.forEach(photo => {
         const img = document.createElement('img');
         
-        if (photo.filename.startsWith('http')) {
-            img.src = photo.filename;
-        } else {
-            img.src = `images/${photo.filename}`; 
-        }
-        
+        // Load the small thumbnail for the grid
+        img.src = `thumbnails/${photo.filename}`; 
         img.className = `gallery-item ${photo.category}`;
-        img.alt = "SKC Moments Photography";
+        img.loading = "lazy"; // Only loads as the user scrolls down
         
         img.addEventListener('click', () => {
             document.getElementById('lightbox').classList.add('active');
-            document.getElementById('lightbox-img').src = img.src;
+            // ONLY load the high-res "big" version when they actually click to see it
+            document.getElementById('lightbox-img').src = `images/${photo.filename}`;
         });
 
         galleryContainer.appendChild(img);
