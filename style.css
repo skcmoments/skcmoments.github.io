@@ -74,16 +74,18 @@ section { padding: 6rem 5%; max-width: 1200px; margin: 0 auto; }
 }
 .gallery-item {
     width: 100%;
-    height: 400px;
+    height: auto;
+    aspect-ratio: 3 / 2; /* Reserves proper landscape grid spaces before loading */
     object-fit: cover;
-    background-color: #f3f3f3;
+    background-color: #EAEAEA; /* A clean placeholder block instead of blank/transparent space */
     opacity: 0;
-    transition: opacity 0.5s ease-in, transform 0.4s;
+    transition: opacity 0.4s ease-in-out, transform 0.3s ease;
     cursor: pointer;
 }
-.gallery-item.loaded { opacity: 1; }
-.gallery-item:hover { transform: scale(1.02); }
 
+.gallery-item.loaded {
+    opacity: 1; /* Smoothly fades into view only when fully loaded */
+}
 /* Lightbox */
 #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
 #lightbox.active { display: flex; }
