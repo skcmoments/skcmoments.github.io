@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- 1. CLOUDINARY DYNAMIC GALLERY ---
 function loadCloudinaryGallery() {
     const cloudName = 'dhvxjqjoi'; 
-    const tag = 'skc_gallery'; // Your new, un-cached bulk tag
+    const tag = 'skc_gallery'; 
     
     const listUrl = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
     const galleryContainer = document.getElementById('dynamic-gallery');
@@ -23,20 +23,16 @@ function loadCloudinaryGallery() {
         .then(data => {
             galleryContainer.innerHTML = ''; 
 
-            // The Bulletproof Mobile Observer
             const imageObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const img = entry.target;
                         
-                        // 1. Tell the browser to download the image
                         img.src = img.dataset.src;
                         
-                        // 2. Check if the mobile phone already has it saved in cache
                         if (img.complete) {
                             img.classList.add('loaded');
                         } else {
-                            // 3. If not in cache, wait for it to finish downloading
                             img.onload = () => {
                                 img.classList.add('loaded');
                             };
@@ -45,18 +41,14 @@ function loadCloudinaryGallery() {
                         observer.unobserve(img);
                     }
                 });
-            }, { rootMargin: '500px' }); // Gives mobile plenty of time to load before scrolling
+            }, { rootMargin: '500px' }); 
 
             data.resources.forEach(photo => {
                 const img = document.createElement('img');
                 
-                // Lightweight 600px thumbnail for the grid
                 const thumbnailUrl = `https://res.cloudinary.com/${cloudName}/image/upload/w_600,c_scale,q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
-                
-                // Heavy high-res original for the lightbox
                 const lightboxUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
                 
-                // Read category for your filter buttons
                 const category = photo.context && photo.context.custom && photo.context.custom.category 
                                  ? photo.context.custom.category 
                                  : 'all';
@@ -64,7 +56,6 @@ function loadCloudinaryGallery() {
                 img.className = `gallery-item ${category}`; 
                 img.dataset.src = thumbnailUrl; 
 
-                // Open lightbox on click
                 img.addEventListener('click', () => {
                     document.getElementById('lightbox').classList.add('active');
                     document.getElementById('lightbox-img').src = lightboxUrl;
@@ -89,3 +80,35 @@ function filterGallery(category) {
     if (window.event && window.event.currentTarget) {
         window.event.currentTarget.classList.add('active');
     }
+
+    items.forEach(item => {
+        if (category === 'all' || item.classList.contains(category)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.getElementById('lightbox-img').src = ''; 
+}
+
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+});
+
+function setupScrollAnimations() {
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOnScroll = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('appear');
+            }
+        });
+    }, { threshold: 0.1 });
+    faders.forEach(fader => appearOnScroll.observe(fader));
+}
