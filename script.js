@@ -16,32 +16,12 @@ function loadCloudinaryGallery() {
     fetch(listUrl)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response failed. Ensure "Resource list" is enabled in Cloudinary Security settings.');
+                throw new Error('Network response failed.');
             }
             return response.json();
         })
         .then(data => {
             galleryContainer.innerHTML = ''; 
-
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        
-                        img.src = img.dataset.src;
-                        
-                        if (img.complete) {
-                            img.classList.add('loaded');
-                        } else {
-                            img.onload = () => {
-                                img.classList.add('loaded');
-                            };
-                        }
-                        
-                        observer.unobserve(img);
-                    }
-                });
-            }, { rootMargin: '500px' }); 
 
             data.resources.forEach(photo => {
                 const img = document.createElement('img');
@@ -54,7 +34,15 @@ function loadCloudinaryGallery() {
                                  : 'all';
 
                 img.className = `gallery-item ${category}`; 
-                img.dataset.src = thumbnailUrl; 
+                
+                // NATIVE MOBILE LAZY LOADING (Foolproof)
+                img.loading = 'lazy';
+                img.src = thumbnailUrl; 
+
+                // Fade in smoothly once the phone finishes downloading it
+                img.onload = () => {
+                    img.classList.add('loaded');
+                };
 
                 img.addEventListener('click', () => {
                     document.getElementById('lightbox').classList.add('active');
@@ -62,12 +50,11 @@ function loadCloudinaryGallery() {
                 });
 
                 galleryContainer.appendChild(img);
-                imageObserver.observe(img);
             });
         })
         .catch(error => {
             console.error("Error loading gallery:", error);
-            galleryContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 2rem;">Unable to load gallery. Please check your Cloudinary Security Settings.</p>';
+            galleryContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 2rem;">Unable to load gallery.</p>';
         });
 }
 
