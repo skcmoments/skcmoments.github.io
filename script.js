@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- 1. CLOUDINARY DYNAMIC GALLERY ---
 function loadCloudinaryGallery() {
     const cloudName = 'dhvxjqjoi'; 
-    const tag = 'skc_gallery'; 
+    const tag = 'skc_gallery'; // Using your updated active tag
     
     const listUrl = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
     const galleryContainer = document.getElementById('dynamic-gallery');
@@ -16,7 +16,7 @@ function loadCloudinaryGallery() {
     fetch(listUrl)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response failed. Ensure "Resource list" is enabled in Cloudinary Security settings.');
+                throw new Error('Network response failed.');
             }
             return response.json();
         })
@@ -32,28 +32,31 @@ function loadCloudinaryGallery() {
                         observer.unobserve(img);
                     }
                 });
-            }, { rootMargin: '100px' });
+            }, { rootMargin: '200px' }); // Increased margin to start loading slightly before scrolling to them
 
             data.resources.forEach(photo => {
                 const img = document.createElement('img');
                 
-                // Fetch perfectly sized, auto-formatted image from Cloudinary
-                const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
+                // 1. LIGHTWEIGHT THUMBNAIL FOR THE GRID (Resized to 600px width max for crisp retina mobile screens)
+                const thumbnailUrl = `https://res.cloudinary.com/${cloudName}/image/upload/w_600,c_scale,q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
                 
-                // Read context metadata for filtering
+                // 2. HIGH-RES VERSION (Only downloaded when someone clicks the photo)
+                const lightboxUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
+                
                 const category = photo.context && photo.context.custom && photo.context.custom.category 
                                  ? photo.context.custom.category 
                                  : 'all';
 
                 img.className = `gallery-item ${category}`; 
-                img.dataset.src = imageUrl;
+                img.dataset.src = thumbnailUrl; // Lazy load the small thumbnail
                 
                 // Transparent placeholder
                 img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="; 
 
+                // Pass the high-res URL to the lightbox handler
                 img.addEventListener('click', () => {
                     document.getElementById('lightbox').classList.add('active');
-                    document.getElementById('lightbox-img').src = imageUrl;
+                    document.getElementById('lightbox-img').src = lightboxUrl;
                 });
 
                 galleryContainer.appendChild(img);
@@ -72,7 +75,9 @@ function filterGallery(category) {
     const btns = document.querySelectorAll('.filter-btn');
     btns.forEach(btn => btn.classList.remove('active'));
     
-    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+    if (window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
+    }
 
     items.forEach(item => {
         if (category === 'all' || item.classList.contains(category)) {
@@ -85,6 +90,7 @@ function filterGallery(category) {
 
 function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
+    document.getElementById('lightbox-img').src = ''; // Clear source to save memory on close
 }
 
 window.addEventListener('scroll', () => {
