@@ -1,14 +1,14 @@
 // --- 1. FIREBASE INITIALIZATION ---
 // Replace these with your actual Firebase project credentials
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
+    apiKey: "AIzaSyAQzP-ypTe05w4_gRenmibeW-KoXw4fInY",
+    authDomain: "skcmoments.firebaseapp.com",
+    projectId: "skcmoments",
+    storageBucket: "skcmoments.firebasestorage.app",
+    messagingSenderId: "858743785408",
+    appId: "1:858743785408:web:c2b03723d80868b3a32a25",
+    measurementId: "G-MJR54VTJSJ"
+  };
 
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
