@@ -5,12 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- 1. CLOUDINARY DYNAMIC GALLERY ---
 function loadCloudinaryGallery() {
-    // Your specific Cloudinary name
     const cloudName = 'dhvxjqjoi'; 
-    // The tag you must apply to images in your Cloudinary dashboard
     const tag = 'portfolio'; 
     
-    // Cloudinary automatically generates this JSON list for you
     const listUrl = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
     const galleryContainer = document.getElementById('dynamic-gallery');
 
@@ -24,9 +21,8 @@ function loadCloudinaryGallery() {
             return response.json();
         })
         .then(data => {
-            galleryContainer.innerHTML = ''; // Clear out any loading text
+            galleryContainer.innerHTML = ''; 
 
-            // Setup the IntersectionObserver for mobile lazy loading
             const imageObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -38,15 +34,11 @@ function loadCloudinaryGallery() {
                 });
             }, { rootMargin: '100px' });
 
-            // Loop through the photos Cloudinary sends back
             data.resources.forEach(photo => {
                 const img = document.createElement('img');
                 
-                // Cloudinary URL builder: q_auto,f_auto perfectly compresses the image for mobile
                 const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
                 
-                // If you add Context Metadata in Cloudinary (Key: category, Value: outdoor/family/functions), it filters perfectly.
-                // Otherwise, it defaults to the 'all' category.
                 const category = photo.context && photo.context.custom && photo.context.custom.category 
                                  ? photo.context.custom.category 
                                  : 'all';
@@ -54,7 +46,6 @@ function loadCloudinaryGallery() {
                 img.className = `gallery-item ${category}`; 
                 img.dataset.src = imageUrl;
                 
-                // Tiny transparent placeholder until the real image loads
                 img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="; 
 
                 img.addEventListener('click', () => {
