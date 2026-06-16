@@ -12,8 +12,8 @@
 <body>
 
     <nav id="navbar">
-            <div class="logo">SKC MOMENTS</div>
-            <div class="nav-links">
+        <div class="logo">SKC MOMENTS</div>
+        <div class="nav-links">
             <a href="#home">Home</a>
             <a href="#portfolio">Portfolio</a>
             <a href="#about">About</a> 
@@ -35,31 +35,31 @@
             <p>A collection of honest moments and beautiful light.</p>
         </div>
         
-       <div class="filter-btns fade-in">
-    <button class="filter-btn active" onclick="filterGallery('all')">All</button>
-    <button class="filter-btn" onclick="filterGallery('family')">Family</button>
-    <button class="filter-btn" onclick="filterGallery('outdoor')">Outdoor</button>
-    <button class="filter-btn" onclick="filterGallery('functions')">Functions</button>
-    </div>
+        <div class="filter-btns fade-in">
+            <button class="filter-btn active" onclick="filterGallery('all')">All</button>
+            <button class="filter-btn" onclick="filterGallery('family')">Family</button>
+            <button class="filter-btn" onclick="filterGallery('outdoor')">Outdoor</button>
+            <button class="filter-btn" onclick="filterGallery('functions')">Functions</button>
+        </div>
 
         <div class="gallery fade-in" id="dynamic-gallery"></div>
     </section>
-    <section id="about">
-    <div class="about-container fade-in">
-        <h2>The Face Behind the Lens</h2>
-        
-        <div class="about-image-wrap">
-            <img src="images/me.jpg" alt="Sachin - SKC Moments" class="about-portrait">
-        </div>
 
-        <div class="about-text-content">
-            <p>I believe the best photographs aren't forced—they are felt. I specialize in utilizing beautiful outdoor backdrops to bring your photos to life.</p>
-            <p>Whether it's the chaotic laughter of a family having fun outdoors, or a quiet glance between couples, my goal is to make you feel completely comfortable.</p>
-            <p>When you book a session with me, you aren't just getting a photographer; you are getting someone dedicated to documenting your life's best chapters exactly as they unfold.</p>
+    <section id="about">
+        <div class="about-container fade-in">
+            <h2>The Face Behind the Lens</h2>
+            
+            <div class="about-image-wrap">
+                <img src="images/me.jpg" alt="Sachin - SKC Moments" class="about-portrait">
+            </div>
+
+            <div class="about-text-content">
+                <p>I believe the best photographs aren't forced—they are felt. I specialize in utilizing beautiful outdoor backdrops to bring your photos to life.</p>
+                <p>Whether it's the chaotic laughter of a family having fun outdoors, or a quiet glance between couples, my goal is to make you feel completely comfortable.</p>
+                <p>When you book a session with me, you aren't just getting a photographer; you are getting someone dedicated to documenting your life's best chapters exactly as they unfold.</p>
+            </div>
         </div>
-    </div>
-</section>
-    <section id="pricing">
+    </section>
 
     <div id="lightbox">
         <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
@@ -98,8 +98,30 @@
         <div class="fade-in">
             <div class="calendly-inline-widget" data-url="https://calendly.com/sachinkadel7/30min" style="min-width:320px;height:700px;"></div>
             <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-            </div>
+        </div>
     </section>
+
+    <!-- ADMIN PANEL -->
+    <section id="admin-panel">
+        <div class="admin-container">
+            <h3>Admin Gallery Manager</h3>
+            <p>Upload new photos directly to your live website portfolio.</p>
+            
+            <div class="upload-form">
+                <input type="file" id="photo-file" accept="image/*">
+                
+                <select id="photo-category">
+                    <option value="family">Family</option>
+                    <option value="outdoor">Outdoor</option>
+                    <option value="functions">Functions</option>
+                </select>
+                
+                <button id="btn-upload" onclick="handleUpload()">Upload Photo</button>
+            </div>
+            <div id="upload-status"></div>
+        </div>
+    </section>
+
     <footer>
         <p>&copy; 2026 SKC Moments. All rights reserved.</p>
         <p style="margin-top: 10px; font-size: 0.8rem;">
@@ -108,6 +130,11 @@
         </p>
     </footer>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    
     <script src="script.js"></script>
 </body>
 </html>
