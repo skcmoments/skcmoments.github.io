@@ -23,16 +23,20 @@ function loadCloudinaryGallery() {
         .then(data => {
             galleryContainer.innerHTML = ''; 
 
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.onload = () => img.classList.add('loaded');
-                        observer.unobserve(img);
-                    }
-                });
-            }, { rootMargin: '200px' }); // Increased margin to start loading slightly before scrolling to them
+          const imageObserver = new IntersectionObserver((entries, observer) => {entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            
+            // FIX: Attach the load listener FIRST before assigning the source
+            img.onload = () => {
+                img.classList.add('loaded');
+            };
+            
+            img.src = img.dataset.src;
+            observer.unobserve(img);
+        }
+    });
+}, { rootMargin: '300px' }); // Gives mobile devices more lead time to fetch images before they scroll into view
 
             data.resources.forEach(photo => {
                 const img = document.createElement('img');
