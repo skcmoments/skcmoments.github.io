@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- 1. CLOUDINARY DYNAMIC GALLERY ---
 function loadCloudinaryGallery() {
     const cloudName = 'dhvxjqjoi'; 
-    const tag = 'portfolio'; 
+    const tag = 'skc_gallery'; 
     
     const listUrl = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
     const galleryContainer = document.getElementById('dynamic-gallery');
