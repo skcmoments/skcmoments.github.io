@@ -1,116 +1,78 @@
-// --- 1. FIREBASE INITIALIZATION ---
-// Replace these with your actual Firebase project credentials
-const firebaseConfig = {
-    apiKey: "AIzaSyAQzP-ypTe05w4_gRenmibeW-KoXw4fInY",
-    authDomain: "skcmoments.firebaseapp.com",
-    projectId: "skcmoments",
-    storageBucket: "skcmoments.firebasestorage.app",
-    messagingSenderId: "858743785408",
-    appId: "1:858743785408:web:c2b03723d80868b3a32a25",
-    measurementId: "G-MJR54VTJSJ"
-  };
-
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const storage = firebase.storage();
-
 document.addEventListener('DOMContentLoaded', () => {
-    listenToGalleryUpdates();
+    loadCloudinaryGallery();
     setupScrollAnimations();
 });
 
-// --- 2. DYNAMIC GALLERY SYNC ---
-function listenToGalleryUpdates() {
+// --- 1. CLOUDINARY DYNAMIC GALLERY ---
+function loadCloudinaryGallery() {
+    // Your specific Cloudinary name
+    const cloudName = 'dhvxjqjoi'; 
+    // The tag you must apply to images in your Cloudinary dashboard
+    const tag = 'portfolio'; 
+    
+    // Cloudinary automatically generates this JSON list for you
+    const listUrl = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
     const galleryContainer = document.getElementById('dynamic-gallery');
+
     if (!galleryContainer) return;
 
-    // Listen to Firebase realtime database
-    database.ref('photos').on('value', (snapshot) => {
-        galleryContainer.innerHTML = ''; 
-        
-        const data = snapshot.val();
-        if (!data) {
-            galleryContainer.innerHTML = '<p class="text-muted" style="grid-column: 1 / -1; text-align: center;">No photos uploaded yet.</p>';
-            return;
-        }
+    fetch(listUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed. Ensure "Resource list" is enabled in Cloudinary Security settings.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            galleryContainer.innerHTML = ''; // Clear out any loading text
 
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.onload = () => img.classList.add('loaded');
-                    observer.unobserve(img);
-                }
-            });
-        }, { rootMargin: '100px' });
-
-        Object.keys(data).forEach(key => {
-            const photo = data[key];
-            
-            const img = document.createElement('img');
-            img.className = `gallery-item ${photo.category}`;
-            img.dataset.src = photo.url; 
-            img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
-
-            img.addEventListener('click', () => {
-                document.getElementById('lightbox').classList.add('active');
-                document.getElementById('lightbox-img').src = photo.url;
-            });
-
-            galleryContainer.appendChild(img);
-            imageObserver.observe(img);
-        });
-    });
-}
-
-// --- 3. THE LIVE UPLOAD LOGIC ---
-function handleUpload() {
-    const fileInput = document.getElementById('photo-file');
-    const categorySelect = document.getElementById('photo-category');
-    const statusDiv = document.getElementById('upload-status');
-    const uploadBtn = document.getElementById('btn-upload');
-
-    const file = fileInput.files[0];
-    const category = categorySelect.value;
-
-    if (!file) {
-        statusDiv.innerHTML = "<span style='color: red;'>Please select a photo first!</span>";
-        return;
-    }
-
-    uploadBtn.disabled = true;
-    uploadBtn.innerText = "Uploading...";
-    statusDiv.innerHTML = "Processing asset storage...";
-
-    const storageRef = storage.ref('gallery/' + Date.now() + '_' + file.name);
-    const uploadTask = storageRef.put(file);
-
-    uploadTask.on('state_changed', 
-        (snapshot) => {}, 
-        (error) => {
-            statusDiv.innerHTML = `<span style='color: red;'>Error: ${error.message}</span>`;
-            uploadBtn.disabled = false;
-            uploadBtn.innerText = "Upload Photo";
-        }, 
-        () => {
-            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                database.ref('photos').push({
-                    url: downloadURL,
-                    category: category,
-                    createdAt: firebase.database.ServerValue.TIMESTAMP
-                }).then(() => {
-                    statusDiv.innerHTML = "<span style='color: green;'>Success! Gallery updated dynamically.</span>";
-                    fileInput.value = ''; 
-                    uploadBtn.disabled = false;
-                    uploadBtn.innerText = "Upload Photo";
+            // Setup the IntersectionObserver for mobile lazy loading
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.onload = () => img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
                 });
+            }, { rootMargin: '100px' });
+
+            // Loop through the photos Cloudinary sends back
+            data.resources.forEach(photo => {
+                const img = document.createElement('img');
+                
+                // Cloudinary URL builder: q_auto,f_auto perfectly compresses the image for mobile
+                const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
+                
+                // If you add Context Metadata in Cloudinary (Key: category, Value: outdoor/family/functions), it filters perfectly.
+                // Otherwise, it defaults to the 'all' category.
+                const category = photo.context && photo.context.custom && photo.context.custom.category 
+                                 ? photo.context.custom.category 
+                                 : 'all';
+
+                img.className = `gallery-item ${category}`; 
+                img.dataset.src = imageUrl;
+                
+                // Tiny transparent placeholder until the real image loads
+                img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="; 
+
+                img.addEventListener('click', () => {
+                    document.getElementById('lightbox').classList.add('active');
+                    document.getElementById('lightbox-img').src = imageUrl;
+                });
+
+                galleryContainer.appendChild(img);
+                imageObserver.observe(img);
             });
-        }
-    );
+        })
+        .catch(error => {
+            console.error("Error loading gallery:", error);
+            galleryContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 2rem;">Unable to load gallery. Please check your Cloudinary Security Settings.</p>';
+        });
 }
 
-// --- FILTER & UTILS ---
+// --- 2. FILTER & UTILS ---
 function filterGallery(category) {
     const items = document.querySelectorAll('.gallery-item');
     const btns = document.querySelectorAll('.filter-btn');
