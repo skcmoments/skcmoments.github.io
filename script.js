@@ -37,8 +37,10 @@ function loadCloudinaryGallery() {
             data.resources.forEach(photo => {
                 const img = document.createElement('img');
                 
+                // Fetch perfectly sized, auto-formatted image from Cloudinary
                 const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
                 
+                // Read context metadata for filtering
                 const category = photo.context && photo.context.custom && photo.context.custom.category 
                                  ? photo.context.custom.category 
                                  : 'all';
@@ -46,6 +48,7 @@ function loadCloudinaryGallery() {
                 img.className = `gallery-item ${category}`; 
                 img.dataset.src = imageUrl;
                 
+                // Transparent placeholder
                 img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="; 
 
                 img.addEventListener('click', () => {
