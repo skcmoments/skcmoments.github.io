@@ -1,63 +1,113 @@
-// --- 1. YOUR PHOTO MANAGER ---
-const myPhotos = [
-    { filename: 'b1.jpg', category: 'outdoor' },
-    { filename: 'b3.jpg', category: 'outdoor' },
-    { filename: 'b5.jpg', category: 'outdoor' },
-    { filename: 'a.jpg', category: 'functions' },
-    { filename: 'a2.jpg', category: 'family' },
-    { filename: 'a5.jpg', category: 'family' },
-    { filename: 'e.jpg', category: 'functions' },
-    { filename: 'b.jpg', category: 'functions' },
-    { filename: 's1.jpg', category: 'family' },
-    { filename: 's4.jpg', category: 'family' },
-    { filename: 's6.jpg', category: 'family' },
-    { filename: 'sa1.jpg', category: 'functions' },
-    { filename: 'sa3.jpg', category: 'functions' },
-    { filename: 'sa5.jpg', category: 'functions' },
-    { filename: 'sa7.jpg', category: 'outdoor' }
-];
+// --- 1. FIREBASE INITIALIZATION ---
+// Replace these with your actual Firebase project credentials
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const storage = firebase.storage();
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadGallery();
+    listenToGalleryUpdates();
     setupScrollAnimations();
 });
 
-function loadGallery() {
+// --- 2. DYNAMIC GALLERY SYNC ---
+function listenToGalleryUpdates() {
     const galleryContainer = document.getElementById('dynamic-gallery');
     if (!galleryContainer) return;
 
-    galleryContainer.innerHTML = ''; 
-
-    // This "Observer" watches each image and loads it only when it's on screen
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src; // Moves the real URL into the src
-                img.onload = () => img.classList.add('loaded');
-                observer.unobserve(img); // Stop watching once loaded
-            }
-        });
-    }, { rootMargin: '50px' }); // Starts loading 50px before it enters the screen
-
-    myPhotos.forEach(photo => {
-        const img = document.createElement('img');
-        img.className = `gallery-item ${photo.category}`;
+    // Listen to Firebase realtime database
+    database.ref('photos').on('value', (snapshot) => {
+        galleryContainer.innerHTML = ''; 
         
-        // WE USE "data-src" INSTEAD OF "src" TO PREVENT THE LAG
-        img.dataset.src = `images/${photo.filename}`; 
-        
-        // This is a tiny invisible placeholder so the box exists
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+        const data = snapshot.val();
+        if (!data) {
+            galleryContainer.innerHTML = '<p class="text-muted" style="grid-column: 1 / -1; text-align: center;">No photos uploaded yet.</p>';
+            return;
+        }
 
-        img.addEventListener('click', () => {
-            document.getElementById('lightbox').classList.add('active');
-            document.getElementById('lightbox-img').src = `images/${photo.filename}`;
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.onload = () => img.classList.add('loaded');
+                    observer.unobserve(img);
+                }
+            });
+        }, { rootMargin: '100px' });
+
+        Object.keys(data).forEach(key => {
+            const photo = data[key];
+            
+            const img = document.createElement('img');
+            img.className = `gallery-item ${photo.category}`;
+            img.dataset.src = photo.url; 
+            img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+            img.addEventListener('click', () => {
+                document.getElementById('lightbox').classList.add('active');
+                document.getElementById('lightbox-img').src = photo.url;
+            });
+
+            galleryContainer.appendChild(img);
+            imageObserver.observe(img);
         });
-
-        galleryContainer.appendChild(img);
-        imageObserver.observe(img); // Start watching this image
     });
+}
+
+// --- 3. THE LIVE UPLOAD LOGIC ---
+function handleUpload() {
+    const fileInput = document.getElementById('photo-file');
+    const categorySelect = document.getElementById('photo-category');
+    const statusDiv = document.getElementById('upload-status');
+    const uploadBtn = document.getElementById('btn-upload');
+
+    const file = fileInput.files[0];
+    const category = categorySelect.value;
+
+    if (!file) {
+        statusDiv.innerHTML = "<span style='color: red;'>Please select a photo first!</span>";
+        return;
+    }
+
+    uploadBtn.disabled = true;
+    uploadBtn.innerText = "Uploading...";
+    statusDiv.innerHTML = "Processing asset storage...";
+
+    const storageRef = storage.ref('gallery/' + Date.now() + '_' + file.name);
+    const uploadTask = storageRef.put(file);
+
+    uploadTask.on('state_changed', 
+        (snapshot) => {}, 
+        (error) => {
+            statusDiv.innerHTML = `<span style='color: red;'>Error: ${error.message}</span>`;
+            uploadBtn.disabled = false;
+            uploadBtn.innerText = "Upload Photo";
+        }, 
+        () => {
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                database.ref('photos').push({
+                    url: downloadURL,
+                    category: category,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    statusDiv.innerHTML = "<span style='color: green;'>Success! Gallery updated dynamically.</span>";
+                    fileInput.value = ''; 
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerText = "Upload Photo";
+                });
+            });
+        }
+    );
 }
 
 // --- FILTER & UTILS ---
@@ -66,7 +116,6 @@ function filterGallery(category) {
     const btns = document.querySelectorAll('.filter-btn');
     btns.forEach(btn => btn.classList.remove('active'));
     
-    // Safety check for the click event
     if (event && event.currentTarget) event.currentTarget.classList.add('active');
 
     items.forEach(item => {
