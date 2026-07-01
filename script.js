@@ -66,10 +66,23 @@ function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
 }
 
-function filterGallery(category) {
+function filterGallery(category, clickedElement) {
+    // 1. Update image display
     document.querySelectorAll('.gallery-item').forEach(item => {
-        item.style.display = (category === 'all' || item.classList.contains(category)) ? 'block' : 'none';
+        if (category === 'all' || item.classList.contains(category)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
     });
+
+    // 2. Remove 'active' class from all buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // 3. Add 'active' class to clicked button
+    clickedElement.classList.add('active');
 }
 
 function setupScrollAnimations() {
