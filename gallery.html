@@ -42,10 +42,14 @@
     </section>
 
     <!-- Lightbox for viewing photos full screen -->
-    <div id="lightbox">
-        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
-        <img id="lightbox-img" src="" alt="Full Screen Photo">
-    </div>
+     <div id="lightbox">
+    <button class="nav-btn prev" onclick="changeImage(-1)">&#10094;</button>
+    <img id="lightbox-img" src="" alt="Full Screen Photo">
+    <button class="nav-btn next" onclick="changeImage(1)">&#10095;</button>
+    <span class="close-lightbox" onclick="closeLightbox()" style="position: absolute; top: 20px; right: 20px; color: white; cursor: pointer; font-size: 2rem;">&times;</span>
+</div>
+
+You can now stage, commit, and push these updates following the guide in `git_instructions.md`.
 
     <!-- Reusable Footer -->
     <footer>

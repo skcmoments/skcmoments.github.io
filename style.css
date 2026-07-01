@@ -25,12 +25,69 @@ a:hover { color: var(--accent); }
 .fade-in.appear { opacity: 1; transform: translateY(0); }
 
 /* Nav */
-nav { position: fixed; top: 0; width: 100%; padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; transition: 0.4s; }
-nav.scrolled { background: rgba(250, 250, 250, 0.95); padding: 1rem 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-.logo { font-size: 1.5rem; letter-spacing: 1px; font-family: 'Playfair Display', serif; }
-.nav-links { display: flex; gap: 2rem; text-transform: uppercase; font-size: 0.9rem; align-items: center; }
-.btn-book { background: var(--text-main); color: var(--white); padding: 0.6rem 1.5rem; border-radius: 2px; }
-.btn-book:hover { color: var(--white); background-color: var(--accent); }
+/* Nav */
+/* Nav */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1.5rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    /* Updated to 0.2s for a snappier feel */
+    transition: all 0.2s ease;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+    color: var(--white);
+}
+
+nav.scrolled {
+    background: rgba(250, 250, 250, 0.95);
+    color: var(--text-main);
+    padding: 1rem 5%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    text-shadow: none;
+}
+
+.logo { 
+    font-size: 1.5rem;
+    letter-spacing: 1px; 
+    font-family: 'Playfair Display', serif; }
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    align-items: center;
+    /* This ensures links are visible even if the hero image is busy */
+    transition: color 0.3s;
+}
+
+/* Ensure the links inherit the color change from the nav */
+nav.scrolled .nav-links a {
+    color: var(--text-main);
+}
+.btn-book { 
+    background: var(--text-main); 
+    color: var(--white); 
+    padding: 0.6rem 1.5rem; 
+    border-radius: 2px; }
+.btn-book:hover { 
+    color: var(--white); 
+    background-color: var(--accent); }
+
+    /* Fix for the Book Button when scrolled */
+nav.scrolled .btn-book {
+    background-color: var(--text-main) !important;
+    color: var(--white) !important;
+}
+
+/* Ensure the nav text color doesn't conflict with the button */
+nav.scrolled .nav-links {
+    color: var(--text-main);
+}
 
 /* Hero */
 #home { 
@@ -70,7 +127,7 @@ section { padding: 6rem 5%; max-width: 1200px; margin: 0 auto; }
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
     gap: 1.5rem; 
-    min-height: autox;
+    min-height: auto;
 }
 .gallery-item {
     width: 100%;
@@ -151,4 +208,11 @@ footer { background-color: var(--bg-dark); color: var(--white); text-align: cent
 
 /* Lightbox */
 #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
-/* ... existing code ... */
+.nav-btn { 
+    position: absolute; top: 50%; transform: translateY(-50%);
+    padding: 2rem; color: rgba(255, 255, 255, 0.5); cursor: pointer; 
+    font-size: 3rem; background: none; border: none; transition: color 0.3s;
+}
+.nav-btn:hover { color: rgba(255, 255, 255, 1); }
+.prev { left: 2%; }
+.next { right: 2%; }
