@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Portfolio | SKC Moments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Re-using your exact style.css so the branding matches perfectly -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Simplified Navbar for the Gallery Page -->
+    <nav id="navbar" class="scrolled">
+        <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">SKC MOMENTS</a>
+        <div class="nav-links">
+            <a href="index.html">Back to Home</a>
+            <a href="index.html#contact" class="btn-book">Book a Session</a>
+        </div>
+    </nav>
+
+    <!-- Main Gallery Section (With extra top padding for the fixed nav) -->
+    <section id="portfolio" style="padding-top: 150px; min-height: 80vh;">
+        <div class="section-header fade-in">
+            <h2>Complete Portfolio</h2>
+            <p>A collection of all my favorite moments.</p>
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="filter-btns fade-in">
+            <button class="filter-btn active" onclick="filterGallery('all')">All</button>
+            <button class="filter-btn" onclick="filterGallery('family')">Family</button>
+            <button class="filter-btn" onclick="filterGallery('outdoor')">Outdoor</button>
+            <button class="filter-btn" onclick="filterGallery('functions')">Functions</button>
+        </div>
+
+        <!-- The Script will inject all images here -->
+        <div class="gallery fade-in" id="dynamic-gallery"></div>
+    </section>
+
+    <!-- Lightbox for viewing photos full screen -->
+    <div id="lightbox">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Full Screen Photo">
+    </div>
+
+    <!-- Reusable Footer -->
+    <footer>
+        <p>&copy; 2026 SKC Moments. All rights reserved.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">
+            <a href="https://www.instagram.com/skc_moments" target="_blank">Instagram</a> |
+            <a href="https://www.facebook.com/skc.moments" target="_blank">Facebook</a>
+        </p>
+    </footer>
+
+    <!-- Use your exact same script file -->
+    <script src="script.js?v=2.0"></script>
+</body>
+</html>

@@ -13,6 +13,9 @@ function loadCloudinaryGallery() {
 
     if (!galleryContainer) return;
 
+    // Determine if we are on the dedicated gallery page
+    const isGalleryPage = window.location.pathname.includes('gallery');
+
     fetch(listUrl)
         .then(response => {
             if (!response.ok) {
@@ -23,7 +26,17 @@ function loadCloudinaryGallery() {
         .then(data => {
             galleryContainer.innerHTML = ''; 
 
-            data.resources.forEach(photo => {
+            // Create the stylish 6th "View All" Tile
+            const viewAllTile = document.createElement('div');
+            viewAllTile.className = 'gallery-item view-all-tile loaded'; 
+            viewAllTile.innerHTML = '<span>View All<br>Photos</span>';
+            
+            // THE FIX: Force the browser to go to the new page
+            viewAllTile.addEventListener('click', () => {
+                window.location.href = 'gallery.html'; 
+            });
+
+            data.resources.forEach((photo, index) => {
                 const img = document.createElement('img');
                 
                 const thumbnailUrl = `https://res.cloudinary.com/${cloudName}/image/upload/w_600,c_scale,q_auto,f_auto/v${photo.version}/${photo.public_id}.${photo.format}`;
@@ -35,11 +48,10 @@ function loadCloudinaryGallery() {
 
                 img.className = `gallery-item ${category}`; 
                 
-                // NATIVE MOBILE LAZY LOADING (Foolproof)
+                // NATIVE MOBILE LAZY LOADING
                 img.loading = 'lazy';
                 img.src = thumbnailUrl; 
 
-                // Fade in smoothly once the phone finishes downloading it
                 img.onload = () => {
                     img.classList.add('loaded');
                 };
@@ -49,7 +61,19 @@ function loadCloudinaryGallery() {
                     document.getElementById('lightbox-img').src = lightboxUrl;
                 });
 
-                galleryContainer.appendChild(img);
+                // Smart Loading Logic: Homepage vs Gallery Page
+                if (!isGalleryPage) {
+                    // Homepage: Stop at 5 images and append the tile
+                    if (index < 5) {
+                        galleryContainer.appendChild(img);
+                    }
+                    if (index === 4 && data.resources.length > 5) {
+                        galleryContainer.appendChild(viewAllTile);
+                    }
+                } else {
+                    // Gallery Page: Show everything
+                    galleryContainer.appendChild(img);
+                }
             });
         })
         .catch(error => {
